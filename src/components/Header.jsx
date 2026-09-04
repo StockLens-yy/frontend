@@ -28,7 +28,7 @@ function Header({ user, setUser }) {
                     <>
                         <Link to="/login" style={styles.btnGhost}>로그인</Link>
                         <Link to="/register" style={styles.btnOutline}>회원가입</Link>
-                        <a href="http://localhost:8080/oauth2/authorization/google" style={styles.btnPrimary}>
+                        <a href="http://localhost:8081/oauth2/authorization/google" style={styles.btnPrimary}>
                             Google로 시작
                         </a>
                     </>
