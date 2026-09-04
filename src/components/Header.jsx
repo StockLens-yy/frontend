@@ -19,6 +19,7 @@ function Header({ user, setUser }) {
                 <nav style={styles.nav}>
                     <Link to="/" style={styles.navLink}>종목</Link>
                     <Link to="/backtest" style={styles.navLink}>백테스팅</Link>
+                    <Link to="/portfolio" style={styles.navLink}>모의투자</Link>
                 </nav>
             </div>
             <div style={styles.right}>
