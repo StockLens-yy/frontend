@@ -12,9 +12,15 @@ function Header({ user, setUser }) {
 
     return (
         <header style={styles.header}>
-            <Link to="/" style={styles.logo}>
-                Stock<span style={{ color: '#6366f1' }}>Lens</span>
-            </Link>
+            <div style={styles.left}>
+                <Link to="/" style={styles.logo}>
+                    Stock<span style={{ color: '#6366f1' }}>Lens</span>
+                </Link>
+                <nav style={styles.nav}>
+                    <Link to="/" style={styles.navLink}>종목</Link>
+                    <Link to="/backtest" style={styles.navLink}>백테스팅</Link>
+                </nav>
+            </div>
             <div style={styles.right}>
                 {user ? (
                     <>
@@ -59,6 +65,9 @@ const styles = {
         textDecoration: 'none',
         letterSpacing: '-0.5px',
     },
+    left: { display: 'flex', alignItems: 'center', gap: '28px' },
+    nav: { display: 'flex', alignItems: 'center', gap: '20px' },
+    navLink: { fontSize: '13px', color: '#64748b', textDecoration: 'none', fontWeight: 500 },
     right: { display: 'flex', alignItems: 'center', gap: '8px' },
     userBadge: { display: 'flex', alignItems: 'center', gap: '8px', marginRight: '4px' },
     avatar: {
