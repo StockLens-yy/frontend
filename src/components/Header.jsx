@@ -6,7 +6,12 @@ function Header({ user, setUser }) {
     const navigate = useNavigate();
 
     const handleLogout = async () => {
-        await api.post('/api/auth/logout');
+        try {
+            await api.post('/api/auth/logout');
+        } catch (e) {
+            console.error('로그아웃 요청 실패', e);
+        }
+        // 요청이 실패해도 화면에서는 바로 로그아웃 상태로 바꾼다
         setUser(null);
         navigate('/');
     };
