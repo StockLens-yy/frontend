@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import StockTable from '../components/StockTable';
 import WatchList from '../components/WatchList';
+import StockSearch from '../components/StockSearch';
 import api from '../api/axios';
 
 function HomePage({ user }) {
@@ -100,6 +101,9 @@ function HomePage({ user }) {
                     <p style={styles.aiContent}>{aiResult}</p>
                 </div>
             )}
+
+            {/* 전 종목 검색 */}
+            <StockSearch />
 
             {/* 액션 바 */}
             <div style={styles.actionBar}>
