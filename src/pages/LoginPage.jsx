@@ -12,7 +12,7 @@ function LoginPage({ setUser }) {
         e.preventDefault();
         try {
             const params = new URLSearchParams();
-            params.append('email', email);
+            params.append('username', email); // Spring Security 폼 로그인 기본 파라미터명
             params.append('password', password);
 
             await api.post('/api/auth/login', params, {
@@ -21,7 +21,7 @@ function LoginPage({ setUser }) {
 
             const res = await api.get('/api/auth/me');
             setUser(res.data);
-            navigate('/');
+            navigate('/', { replace: true }); // 뒤로 가기로 로그인 화면에 돌아오지 않게
         } catch (err) {
             setError('이메일 또는 비밀번호가 올바르지 않습니다.');
         }
