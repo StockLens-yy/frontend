@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
+import Logo from '../components/Logo';
 
 function RegisterPage() {
     const [form, setForm] = useState({ name: '', email: '', password: '' });
@@ -25,7 +26,7 @@ function RegisterPage() {
         <div style={styles.container}>
             <div style={styles.card}>
                 <div style={styles.logo}>
-                    Stock<span style={{ color: '#2563eb' }}>Lens</span>
+                    <Logo vertical iconSize={56} fontSize={22} />
                 </div>
                 <p style={styles.subtitle}>계정을 만들고 시작하세요</p>
 
@@ -99,11 +100,9 @@ const styles = {
         border: '1px solid #e8eaed'
     },
     logo: {
-        fontSize: '20px',
-        fontWeight: 700,
-        color: '#1a1a2e',
-        textAlign: 'center',
-        marginBottom: '6px'
+        display: 'flex',
+        justifyContent: 'center',
+        marginBottom: '10px'
     },
     subtitle: {
         textAlign: 'center',

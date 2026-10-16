@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
+import Logo from '../components/Logo';
 
 function LoginPage({ setUser }) {
     const [email, setEmail] = useState('');
@@ -30,7 +31,7 @@ function LoginPage({ setUser }) {
     return (
         <div style={styles.container}>
             <div style={styles.card}>
-                <div style={styles.logo}>Stock<span style={{ color: '#2563eb' }}>Lens</span></div>
+                <div style={styles.logo}><Logo vertical iconSize={56} fontSize={22} /></div>
                 <p style={styles.subtitle}>계속하려면 로그인하세요</p>
 
                 {error && <div style={styles.error}>{error}</div>}
@@ -78,7 +79,7 @@ function LoginPage({ setUser }) {
 const styles = {
     container: { background: '#f5f6f8', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 56px)' },
     card: { background: 'white', borderRadius: '12px', padding: '40px', width: '380px', border: '1px solid #e8eaed' },
-    logo: { fontSize: '20px', fontWeight: 700, color: '#1a1a2e', textAlign: 'center', marginBottom: '6px' },
+    logo: { display: 'flex', justifyContent: 'center', marginBottom: '10px' },
     subtitle: { textAlign: 'center', fontSize: '13px', color: '#9ca3af', marginBottom: '28px' },
     formGroup: { marginBottom: '14px' },
     label: { display: 'block', fontSize: '12px', fontWeight: 500, color: '#374151', marginBottom: '6px' },
