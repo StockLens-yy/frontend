@@ -19,8 +19,6 @@ function HomePage({ user }) {
     const [activeTab, setActiveTab] = useState('all');
     const [lastUpdate, setLastUpdate] = useState('서버 시작 시점');
     const [refreshing, setRefreshing] = useState(false);
-    const [aiResult, setAiResult] = useState('');
-    const [aiLoading, setAiLoading] = useState(false);
 
     const fetchStocks = async () => {
         try {
@@ -79,18 +77,6 @@ function HomePage({ user }) {
         setRefreshing(false);
     };
 
-    const handleAiRecommend = async () => {
-        setAiLoading(true);
-        setAiResult('');
-        try {
-            const res = await api.get('/api/stocks/ai-recommend');
-            setAiResult(res.data);
-        } catch (e) {
-            setAiResult('추천 실패: 로그인이 필요합니다.');
-        }
-        setAiLoading(false);
-    };
-
     const upCount = stocks.filter(s => s.change > 0).length;
     const downCount = stocks.filter(s => s.change < 0).length;
 
@@ -117,20 +103,6 @@ function HomePage({ user }) {
                 </div>
             </div>
 
-            {/* AI 추천 결과 */}
-            {aiResult && (
-                <div style={styles.aiResult}>
-                    <div style={styles.aiHeader}>
-                        <div style={styles.aiTitleWrap}>
-                            <div style={styles.aiDot}></div>
-                            <h3 style={styles.aiTitle}>AI 종목 추천</h3>
-                        </div>
-                        <button style={styles.aiClose} onClick={() => setAiResult('')}>✕</button>
-                    </div>
-                    <p style={styles.aiContent}>{aiResult}</p>
-                </div>
-            )}
-
             {/* 전 종목 검색 */}
             <StockSearch />
 
@@ -154,16 +126,6 @@ function HomePage({ user }) {
                     )}
                 </div>
                 <div style={styles.actionBtns}>
-                    <button
-                        style={styles.btnSecondary}
-                        onClick={handleAiRecommend}
-                        disabled={aiLoading}>
-                        {aiLoading ? (
-                            <span>분석 중...</span>
-                        ) : (
-                            <span>AI 추천</span>
-                        )}
-                    </button>
                     <button
                         style={{...styles.btnPrimary, opacity: refreshing ? 0.7 : 1}}
                         onClick={handleRefresh}
@@ -203,17 +165,6 @@ const styles = {
     summaryLabel: { fontSize: '12px', color: '#94a3b8', fontWeight: 500, marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' },
     summaryValue: { fontSize: '28px', fontWeight: 700, color: '#0f172a' },
     summaryValueSm: { fontSize: '14px', fontWeight: 600, color: '#0f172a', marginTop: '4px' },
-    aiResult: {
-        background: 'linear-gradient(135deg, #faf5ff, #f0f9ff)',
-        border: '1px solid #e9d5ff',
-        borderRadius: '12px', padding: '20px 24px', marginBottom: '24px',
-    },
-    aiHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' },
-    aiTitleWrap: { display: 'flex', alignItems: 'center', gap: '8px' },
-    aiDot: { width: '8px', height: '8px', borderRadius: '50%', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' },
-    aiTitle: { fontSize: '14px', fontWeight: 600, color: '#4c1d95' },
-    aiClose: { background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '16px' },
-    aiContent: { fontSize: '13px', color: '#374151', lineHeight: 1.8, whiteSpace: 'pre-wrap' },
     actionBar: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' },
     tabs: { display: 'flex', gap: '4px', background: '#f1f5f9', borderRadius: '10px', padding: '4px' },
     tabBtn: {
@@ -231,10 +182,6 @@ const styles = {
         padding: '9px 18px', borderRadius: '8px', fontSize: '13px', fontWeight: 600,
         background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: 'white',
         border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(99,102,241,0.3)',
-    },
-    btnSecondary: {
-        padding: '9px 18px', borderRadius: '8px', fontSize: '13px', fontWeight: 500,
-        background: 'white', color: '#475569', border: '1px solid #e2e8f0', cursor: 'pointer',
     },
 };
 

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Chart from 'chart.js/auto';
 import api from '../api/axios';
+import BriefingPanel from './BriefingPanel';
 
 function ChartModal({ stock, onClose }) {
     const chartRef = useRef(null);
@@ -107,6 +108,8 @@ function ChartModal({ stock, onClose }) {
                 <div style={styles.chartContainer}>
                     <canvas ref={chartRef}></canvas>
                 </div>
+
+                <BriefingPanel code={stock.symbol} />
             </div>
         </div>
     );
@@ -114,7 +117,7 @@ function ChartModal({ stock, onClose }) {
 
 const styles = {
     overlay: { position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.4)', zIndex: 1000, display: 'flex', justifyContent: 'center', alignItems: 'center' },
-    modal: { background: 'white', borderRadius: '12px', padding: '24px', width: '760px', maxWidth: '95vw', boxShadow: '0 20px 60px rgba(0,0,0,0.15)' },
+    modal: { background: 'white', borderRadius: '12px', padding: '24px', width: '760px', maxWidth: '95vw', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 20px 60px rgba(0,0,0,0.15)' },
     header: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' },
     title: { fontSize: '16px', fontWeight: 700, color: '#111827' },
     symbol: { fontSize: '12px', color: '#9ca3af', marginTop: '2px' },
