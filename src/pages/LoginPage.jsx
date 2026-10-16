@@ -63,7 +63,7 @@ function LoginPage({ setUser }) {
 
                 <div style={styles.divider}><span>또는</span></div>
 
-                <a href="http://localhost:8080/oauth2/authorization/google" style={styles.btnGoogle}>
+                <a href="http://localhost:8081/oauth2/authorization/google" style={styles.btnGoogle}>
                     Google 계정으로 로그인
                 </a>
 

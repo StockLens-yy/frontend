@@ -4,6 +4,7 @@ import Header from './components/Header';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import BacktestPage from './pages/BacktestPage';
 import api from './api/axios';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
                 <Route path="/" element={<HomePage user={user} />} />
                 <Route path="/login" element={<LoginPage setUser={setUser} />} />
                 <Route path="/register" element={<RegisterPage />} />
+                <Route path="/backtest" element={<BacktestPage />} />
             </Routes>
         </BrowserRouter>
     );
