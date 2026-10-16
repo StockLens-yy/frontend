@@ -35,9 +35,17 @@ function HomePage({ user }) {
         setRefreshing(true);
         try {
             const res = await api.post('/api/stocks/refresh');
-            setStocks(res.data);
-            setLastUpdate(new Date().toLocaleTimeString());
-        } catch (e) { console.error(e); }
+            // 갱신 결과가 비어 있으면 기존 목록을 유지한다
+            if (res.data.length === 0) {
+                setLastUpdate('갱신 실패 (이전 데이터)');
+            } else {
+                setStocks(res.data);
+                setLastUpdate(new Date().toLocaleTimeString());
+            }
+        } catch (e) {
+            console.error(e);
+            setLastUpdate('갱신 실패 (이전 데이터)');
+        }
         setRefreshing(false);
     };
 
