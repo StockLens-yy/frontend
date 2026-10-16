@@ -1,9 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ChartModal from './ChartModal';
 import api from '../api/axios';
 
+const FLASH_MS = 400;
+
 function StockTable({ stocks, user, watchlist, setWatchlist }) {
     const [selectedStock, setSelectedStock] = useState(null);
+    const [flash, setFlash] = useState({});
+    const prevPrices = useRef({});
+
+    // 직전 목록보다 가격이 오르거나 내린 종목을 잠깐 강조한다
+    useEffect(() => {
+        const changed = {};
+        for (const s of stocks) {
+            const prev = prevPrices.current[s.symbol];
+            if (prev != null && s.price != null && prev !== s.price) {
+                changed[s.symbol] = s.price > prev ? 'up' : 'down';
+            }
+            prevPrices.current[s.symbol] = s.price;
+        }
+        if (Object.keys(changed).length === 0) return;
+
+        const show = setTimeout(() => setFlash(changed), 0);
+        const hide = setTimeout(() => setFlash({}), FLASH_MS);
+        return () => { clearTimeout(show); clearTimeout(hide); };
+    }, [stocks]);
 
     const toggleWatch = async (stock) => {
         if (!user) {
@@ -52,7 +73,7 @@ function StockTable({ stocks, user, watchlist, setWatchlist }) {
                                         <div style={styles.stockName}>{stock.name}</div>
                                         <div style={styles.stockCode}>{stock.symbol}</div>
                                     </td>
-                                    <td style={{...styles.td, fontWeight: 600}}>{stock.price?.toLocaleString()}원</td>
+                                    <td style={{...styles.td, fontWeight: 600, ...styles.flash[flash[stock.symbol]]}}>{stock.price?.toLocaleString()}원</td>
                                     <td style={{...styles.td, color: changeColor}}>{stock.change > 0 ? '+' : ''}{stock.change?.toLocaleString()}</td>
                                     <td style={{...styles.td, color: changeColor}}>{stock.changePercent > 0 ? '+' : ''}{stock.changePercent}%</td>
                                     <td style={{...styles.td, color: '#6b7280', fontSize: '12px'}}>{stock.volume?.toLocaleString()}</td>
@@ -71,7 +92,7 @@ function StockTable({ stocks, user, watchlist, setWatchlist }) {
 
             {selectedStock && (
                 <ChartModal
-                    stock={selectedStock}
+                    stock={stocks.find(s => s.symbol === selectedStock.symbol) || selectedStock}
                     onClose={() => setSelectedStock(null)}
                 />
             )}
@@ -85,6 +106,10 @@ const styles = {
     th: { padding: '11px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.5px', background: '#f9fafb', borderBottom: '1px solid #e8eaed' },
     tr: { borderBottom: '1px solid #f3f4f6' },
     td: { padding: '13px 16px', textAlign: 'right', fontSize: '13px', color: '#374151' },
+    flash: {
+        up: { background: 'rgba(220, 38, 38, 0.12)', transition: 'background 0.2s' },
+        down: { background: 'rgba(37, 99, 235, 0.12)', transition: 'background 0.2s' },
+    },
     stockName: { fontWeight: 600, fontSize: '13px', color: '#111827' },
     stockCode: { fontSize: '11px', color: '#9ca3af', marginTop: '2px' },
     watchBtn: { background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', padding: '2px' },

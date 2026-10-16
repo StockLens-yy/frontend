@@ -4,6 +4,15 @@ import WatchList from '../components/WatchList';
 import StockSearch from '../components/StockSearch';
 import api from '../api/axios';
 
+const POLL_INTERVAL_MS = 10000;
+
+// 종목들 중 가장 최근 시세 갱신 시각
+const latestUpdate = (stocks) => {
+    const times = stocks.map(s => s.updatedAt).filter(Boolean).sort();
+    if (times.length === 0) return '서버 시작 시점';
+    return new Date(times[times.length - 1]).toLocaleTimeString();
+};
+
 function HomePage({ user }) {
     const [stocks, setStocks] = useState([]);
     const [watchlist, setWatchlist] = useState([]);
@@ -13,15 +22,11 @@ function HomePage({ user }) {
     const [aiResult, setAiResult] = useState('');
     const [aiLoading, setAiLoading] = useState(false);
 
-    useEffect(() => {
-        fetchStocks();
-        if (user) fetchWatchlist();
-    }, [user]);
-
     const fetchStocks = async () => {
         try {
             const res = await api.get('/api/stocks');
             setStocks(res.data);
+            setLastUpdate(latestUpdate(res.data));
         } catch (e) { console.error(e); }
     };
 
@@ -32,6 +37,31 @@ function HomePage({ user }) {
         } catch (e) { console.error(e); }
     };
 
+    useEffect(() => {
+        fetchStocks();
+        if (user) fetchWatchlist();
+    }, [user]);
+
+    // 실시간 체결가 스트림: 체결될 때마다(0.2초 단위로 묶여) 들어오는 가격을 바로 반영한다
+    useEffect(() => {
+        const source = new EventSource(`${api.defaults.baseURL}/api/stocks/stream`);
+        source.addEventListener('quotes', (e) => {
+            const quotes = JSON.parse(e.data);
+            const bySymbol = Object.fromEntries(quotes.map(q => [q.symbol, q]));
+            setStocks(prev => prev.map(s => bySymbol[s.symbol] ? { ...s, ...bySymbol[s.symbol] } : s));
+            setLastUpdate(latestUpdate(quotes));
+        });
+        return () => source.close();
+    }, []);
+
+    // 실시간 등록 한도(40종목) 밖의 종목은 백엔드가 주기적으로 갱신하므로, 목록도 주기적으로 다시 받아온다
+    useEffect(() => {
+        const timer = setInterval(() => {
+            if (!document.hidden) fetchStocks();
+        }, POLL_INTERVAL_MS);
+        return () => clearInterval(timer);
+    }, []);
+
     const handleRefresh = async () => {
         setRefreshing(true);
         try {
@@ -40,8 +70,7 @@ function HomePage({ user }) {
             if (res.data.length === 0) {
                 setLastUpdate('갱신 실패 (이전 데이터)');
             } else {
-                setStocks(res.data);
-                setLastUpdate(new Date().toLocaleTimeString());
+                await fetchStocks(); // 자동 갱신과 같은 순서로 보여주기 위해 목록을 다시 받는다
             }
         } catch (e) {
             console.error(e);
