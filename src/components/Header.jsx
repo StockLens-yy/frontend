@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
+import Logo from './Logo';
 
 function Header({ user, setUser }) {
     const navigate = useNavigate();
@@ -13,8 +14,8 @@ function Header({ user, setUser }) {
     return (
         <header style={styles.header}>
             <div style={styles.left}>
-                <Link to="/" style={styles.logo}>
-                    Stock<span style={{ color: '#6366f1' }}>Lens</span>
+                <Link to="/" style={styles.logo} aria-label="StockLens 홈">
+                    <Logo />
                 </Link>
                 <nav style={styles.nav}>
                     <Link to="/" style={styles.navLink}>종목</Link>
@@ -59,13 +60,7 @@ const styles = {
         top: 0,
         zIndex: 100,
     },
-    logo: {
-        fontSize: '20px',
-        fontWeight: 700,
-        color: '#0f172a',
-        textDecoration: 'none',
-        letterSpacing: '-0.5px',
-    },
+    logo: { textDecoration: 'none', display: 'flex' },
     left: { display: 'flex', alignItems: 'center', gap: '28px' },
     nav: { display: 'flex', alignItems: 'center', gap: '20px' },
     navLink: { fontSize: '13px', color: '#64748b', textDecoration: 'none', fontWeight: 500 },
