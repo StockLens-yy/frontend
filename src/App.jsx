@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import BacktestPage from './pages/BacktestPage';
+import PortfolioPage from './pages/PortfolioPage';
 import api from './api/axios';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
                 <Route path="/login" element={<LoginPage setUser={setUser} />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/backtest" element={<BacktestPage />} />
+                <Route path="/portfolio" element={<PortfolioPage user={user} />} />
             </Routes>
         </BrowserRouter>
     );
